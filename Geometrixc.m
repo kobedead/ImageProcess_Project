@@ -22,28 +22,71 @@ for i = 1 : length(video(:,1,1))
     frame = video(i,:,:);
     frame = squeeze(frame);
 
-    framead =imadjust(frame,[0 1],[0 1], 0.2);
+    framead =imadjust(frame,[0 1],[0 1], 0.18);
+    
+
     imshow(framead )
     hold on 
-    [centers, radii, metric] = imfindcircles(framead,[20 50], 'ObjectPolarity','dark'  );
+
+   
+    %big circles (on the arm)
+    [centers, radii, metric] = imfindcircles(framead,[20 50], 'ObjectPolarity','dark'  , 'EdgeThreshold',0.2 , 'Method', 'TwoStage', 'Sensitivity',0.9 );
 
     viscircles(centers, radii,'EdgeColor','b');
+    
+    %smaller points (on the base)
+    [centersH, radiiH, metricH] = imfindcircles(framead,[10 20], 'ObjectPolarity','dark'  );
+    
+    %get the lowest 2 points
+    help = find(centersH(:,2) > 1300);
+    lowpoints = centersH(help , :);
+    viscircles(lowpoints, radiiH(help),'EdgeColor','g');
+    
+    
+    %distance between them 
+    %distanceBetween = sqrt((lowpoints(1,1)-lowpoints(2,1))^2+(lowpoints(1,2)-lowpoints(2,2))^2); 
+    plot([lowpoints(1,1),lowpoints(2,1)],[lowpoints(1,2),lowpoints(2,2)],'Color','r','LineWidth',2);
 
 
+
+    %for points of the arm
+    
     p1 = [0 0];
     p2 = [0 0];
-    for i = 1 : length(centers)
-        for j = 1 : length(centers)
-            dis = sqrt((centers(i,1)-centers(j,1))^2+(centers(i,2)-centers(j,2))^2);
-            if((488 < dis) &&(dis < 495))
-                p1 = centers(i,:);
-                p2 = centers(j,:);
-                break
+    if (length(centers)>2)
+        for i = 1 : length(centers)
+            for j = 1 : length(centers)
+                dis = sqrt((centers(i,1)-centers(j,1))^2+(centers(i,2)-centers(j,2))^2);
+                if((490 < dis) &&(dis < 492))
+                    p1 = centers(i,:);
+                    p2 = centers(j,:);
+                    break
+                end
             end
         end
     end
+    %standerdize direction ig 
+    if(p1(1) < p2(1) )
+        %point 1 is on the left
+    else 
+        ptussen = p1 ;
+        p1 = p2;
+        p2 = ptussen;
+    end
+
     
-    plot([p1(1),p2(1)],[p1(2),p2(2)],'Color','r','LineWidth',2)
+    plot([p1(1),p2(1)],[p1(2),p2(2)],'Color','r','LineWidth',2);
+
+    %vector P2P1
+    vecP2P1 = [p1(1)-p2(1)  p1(2)-p2(2)];
+    vecP2P1 = vecP2P1/norm(vecP2P1);
+    %center of line (ongeveer)
+    center = p2+vecP2P1*488/2;
+    %plot center of line
+    viscircles(center,10)
+
+
+
     hold off
 
     pause(0.00001)
@@ -93,7 +136,25 @@ for i = 1 : length(centers)
     end
 end
 
+%standerdize direction ig 
+if(p1(1) < p2(1) )
+    %point 1 is on the left
+else 
+    ptussen = p1 ;
+    p1 = p2;
+    p2 = ptussen;
+end
+
+%line between them
 plot([p1(1),p2(1)],[p1(2),p2(2)],'Color','r','LineWidth',2)
+%vector P2P1
+vecP2P1 = [p1(1)-p2(1)  p1(2)-p2(2)];
+vecP2P1 = vecP2P1/norm(vecP2P1);
+%center of line (ongeveer)
+center = p2+vecP2P1*488/2;
+%plot center of line
+viscircles(center,10)
+
 
 
 
