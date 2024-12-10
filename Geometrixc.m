@@ -24,8 +24,11 @@ for i = 1 : length(video(:,1,1))
 
     framead =imadjust(frame,[0 1],[0 1], 0.18);
     
+    frame(frame>130) = 0;
+    %frame(frame<30) = 0;
+    frame = imbinarize(frame);
 
-    imshow(framead )
+    imshow(frame )
     hold on 
 
    
@@ -57,7 +60,7 @@ for i = 1 : length(video(:,1,1))
         for i = 1 : length(centers)
             for j = 1 : length(centers)
                 dis = sqrt((centers(i,1)-centers(j,1))^2+(centers(i,2)-centers(j,2))^2);
-                if((490 < dis) &&(dis < 492))
+                if((489 < dis) &&(dis < 493))
                     p1 = centers(i,:);
                     p2 = centers(j,:);
                     break
