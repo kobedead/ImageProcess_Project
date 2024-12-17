@@ -22,13 +22,10 @@ for i = 1 : length(video(:,1,1))
     frame = video(i,:,:);
     frame = squeeze(frame);
 
+    %maybe use grayscale dilation!
     framead =imadjust(frame,[0 1],[0 1], 0.18);
-    
-    frame(frame>130) = 0;
-    %frame(frame<30) = 0;
-    frame = imbinarize(frame);
-
-    imshow(frame )
+   
+    imshow(frame)
     hold on 
 
    
@@ -68,6 +65,7 @@ for i = 1 : length(video(:,1,1))
             end
         end
     end
+
     %standerdize direction ig 
     if(p1(1) < p2(1) )
         %point 1 is on the left
@@ -76,6 +74,8 @@ for i = 1 : length(video(:,1,1))
         p1 = p2;
         p2 = ptussen;
     end
+
+    
 
     
     plot([p1(1),p2(1)],[p1(2),p2(2)],'Color','r','LineWidth',2);
@@ -87,6 +87,30 @@ for i = 1 : length(video(:,1,1))
     center = p2+vecP2P1*488/2;
     %plot center of line
     viscircles(center,10)
+
+
+    %point on right side of arm 
+    frameB = frame;
+    frameB(frame>100) = 0;
+    frameB = imbinarize(frameB);
+    
+    s = regionprops(frameB);
+    Area = cat(1, s.Area); 
+    Center = cat(1 , s.Centroid);
+
+    
+
+    big = Center((Area>100 & Area <10000 ),:);
+    p3=0;
+    for i = 1:length(big)
+        dis = sqrt((big(i,1)-p2(1,1))^2+(big(i,2)-p2(1,2))^2); %should be 493.9777
+        if (493 < dis) && (dis < 494.9)
+            p3 = big(i,:);
+            plot([p2(1),p3(1)],[p2(2),p3(2)],'Color','r','LineWidth',2);
+
+        end
+    end
+
 
 
 
@@ -205,7 +229,13 @@ viscircles(point,10)
 
 plot(point,'.')
 
+%%
 
+
+centerint = int32(center);
+yea = RegGrow(frame , 20 , centerint);
+
+imshow(yea)
 
 
 
