@@ -1,6 +1,6 @@
 function [angle] = CalculateAngle(point1,point2)
 % Calculates the angle between 2 points
-%   The 0° anle is pointed downwards 
+%   The 0° angle is pointed downwards 
 
 % vector van motor center naar moving point
 dx = point2(1) - point1(1);
