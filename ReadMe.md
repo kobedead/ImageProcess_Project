@@ -12,23 +12,25 @@ For example if you want to see half of the video, you can set x to 0 and y to 4 
 - start_chunk = **0**;
 - end_chunk = **4**;
 
-Loading all chunks is not advisable, since this can take a while to run.
+**Loading all chunks is not advisable, since this can take a while to run.**
+
 ---
 To be able to run this script you need the following files:
 - list_positions(0-4).mat
 - Position(5-9).mat
-- bucket_template_left_final.png
-- bucket_template_right_final.png
 - Dataset encoder 1.csv *
 - Ballenwerper_sync_380fps_006.npy_output_video.mp4 *
+
 all the chunks
 - Ballenwerper_sync_380fps_006.npychunk_(0-9).mat *
+
+and all the files in the GitHub repository
 
 \**These files are available in the assignment*
 
 ---
 
-You can find all other scripts in the **OtherScripts** foldet. This contains scripts that have been used for testing purposes, but weren't implemented in the final design.
+You can find all other scripts in the **OtherScripts** folder. This contains scripts that have been used for testing purposes, but weren't implemented in the final design.
 
 In the **Results** folder, you can find some results that are mentioned in the project document.
 
